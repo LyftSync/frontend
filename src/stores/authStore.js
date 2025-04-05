@@ -109,7 +109,6 @@ const useAuthStore = create(
           }, "loading");
         },
 
-        // Helper to handle unauthorized responses (call this when you get 401)
         handleUnauthorized: () => {
           set({ token: null, user: null, isAuthenticated: false });
           showMessage({

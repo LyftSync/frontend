@@ -8,7 +8,7 @@ import AppNavigator from "./src/navigation/AppNavigator";
 export default function App() {
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="default" />
+      <StatusBar barStyle="dark-default" />
 
       <ErrorBoundary>
         <AppNavigator />
@@ -22,6 +22,5 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
   },
 });

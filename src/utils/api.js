@@ -9,7 +9,7 @@ if (!API_BASE_URL) {
     "FATAL ERROR: you human always so forgetful, check the env fag",
   );
   Alert.alert(
-    "Configuration Error",
+    "Application Configuration Error",
     "API Base URL is missing. The app cannot function correctly. Please check the setup.",
   );
 }
@@ -27,6 +27,12 @@ const handleApiResponse = async (response) => {
       message: data.message || "Unknown server error",
     });
     throw new Error("Internal Server Error");
+  }
+
+  if (response.status === 401) {
+    console.warn("API request received 401 Unauthorized. Triggering logout.");
+    useAuthStore.getState().handleUnauthorized(); // Trigger logout and message
+    throw new Error(data.message || "Unauthorized - Session may have expired.");
   }
 
   if (!response.ok) {
@@ -73,14 +79,20 @@ export const apiRequest = async (
 
   try {
     const response = await fetch(url, config);
-    return await handleApiResponse(response);
+    const data = await handleApiResponse(response);
+    return data;
   } catch (err) {
     console.error("API request failed:", { url, method, error: err.message });
-    if (err.message === "HTTP error! Status") {
+    if (
+      err.message !== "Unauthorized - Session may have expired." &&
+      !err.message.startsWith("HTTP error! Status:")
+    ) {
       showMessage({
-        message: "Couldn't connect the server!",
-        description: "",
-        type: "error",
+        message: "Request failed!",
+        description:
+          err.message ||
+          "Could not connect to the server or process the request.",
+        type: "danger",
         duration: 4000,
       });
     }

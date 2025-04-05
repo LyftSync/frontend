@@ -8,8 +8,6 @@ import MainAppNavigator from "./MainAppNavigator";
 export default function AppNavigator() {
   const { isAuthenticated } = useAuthStore();
 
-  console.log("AppNavigator rendering, isAuthenticated:", isAuthenticated);
-
   return (
     <NavigationContainer>
       {isAuthenticated ? <MainAppNavigator /> : <AuthNavigator />}
