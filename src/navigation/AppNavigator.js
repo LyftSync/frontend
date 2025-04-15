@@ -4,7 +4,7 @@ import useAuthStore from "../stores/authStore";
 
 import AuthNavigator from "./AuthNavigator";
 import MainAppNavigator from "./MainAppNavigator";
-
+import HomeMapTab from "../HomeMapTab"
 export default function AppNavigator() {
   const { isAuthenticated } = useAuthStore();
 
@@ -12,7 +12,9 @@ export default function AppNavigator() {
 
   return (
     <NavigationContainer>
-      {isAuthenticated ? <MainAppNavigator /> : <AuthNavigator />}
+      {/* {isAuthenticated ? <MainAppNavigator /> : <AuthNavigator />} */}
+
+      {isAuthenticated ? <HomeMapTab /> : <AuthNavigator />}
     </NavigationContainer>
   );
 }

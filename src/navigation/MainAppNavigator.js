@@ -10,9 +10,10 @@ export default function MainAppNavigator() {
     <Stack.Navigator>
       <Stack.Screen
         name="Home"
-        component={HomeScreen}
+        component={Home}
         options={{ title: "Home" }}
       />
     </Stack.Navigator>
   );
 }
+

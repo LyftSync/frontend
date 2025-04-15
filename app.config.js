@@ -6,11 +6,11 @@ export default {
     slug: "lyftsync",
     version: "0.1.0",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: "./assets/images/circlelogo.png",
     userInterfaceStyle: "light",
     newArchEnabled: true,
     splash: {
-      image: "./assets/splash-icon.png",
+      image: "./assets/images/circlelogo.png",
       resizeMode: "contain",
       backgroundColor: "#ffffff",
     },
@@ -20,12 +20,12 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
+        foregroundImage: "./assets/images/circlelogo.png",
         backgroundColor: "#ffffff",
       },
-      package: "com.yuja.lyftsync",
+      package: "com.cat.lyftsync",
     },
-    web: { favicon: "./assets/favicon.png" },
+    web: { favicon: "./assets/images/circlelogo.png" },
     extra: {
       apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
     },
