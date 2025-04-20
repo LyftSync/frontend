@@ -1,29 +1,33 @@
-import { View, Text, SafeAreaView } from 'react-native'
-import React from 'react'
+import React, { useRef } from 'react'
+import { View, SafeAreaView } from 'react-native'
 import SearchBox from '../../components/map/SearchBox'
-import Map from "../../components/map/Map"
+import Map from '../../components/map/Map'
+import LocateMeButton from '../../components/map/LocateMeButton'
+import BookingPopUp from '../../components/map/BookingPopUp'
+import BookingBottomSheet from '../../components/map/BookingBottomSheet'
+
 const Home = () => {
+  const sheetRef = useRef(null)
+
+  const openBottomSheet = () => {
+    sheetRef.current?.expand()
+  }
+
   return (
+    <View style={{ flex: 1 }}>
+      <Map />
 
-    <View>
-
-      <View style={{ width: '100%', height: '100%' }}>
-        <Map />
-      </View>
-
-      <SafeAreaView
-        style={{
-          position: 'absolute',
-          left: 10,
-          right: 10,
-          top: 10,
-          bottom: 0,
-        }}>
+      <SafeAreaView style={{ position: 'absolute', left: 10, right: 10, top: 10 }}>
         <SearchBox />
       </SafeAreaView>
-      {/* <View style={{ flex: 1 }}>
-        <LocateMe />
-      </View> */}
+
+      <BookingPopUp onPress={openBottomSheet} />
+
+      <View style={{ position: 'absolute', bottom: 100, right: 25 }}>
+        <LocateMeButton />
+      </View>
+
+      <BookingBottomSheet ref={sheetRef} />
     </View>
   )
 }

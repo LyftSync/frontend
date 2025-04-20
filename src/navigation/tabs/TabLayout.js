@@ -12,8 +12,8 @@ import HomeScreen from '../../screens/HomeScreen'
 const Tab = createBottomTabNavigator()
 
 const TabIcon = ({ source, focused }) => (
-  <View style={{ padding: 10, backgroundColor: focused ? '#444' : 'transparent', borderRadius: 999 }}>
-    <Image source={source} style={{ width: 24, height: 24, tintColor: 'white' }} resizeMode="contain" />
+  <View style={{ padding: 10, backgroundColor: focused ? '#10e3c0' : 'transparent', borderRadius: 999 }}>
+    <Image source={source} style={{ width: 30, height: 30, tintColor: 'white' }} resizeMode="contain" />
   </View>
 )
 
@@ -24,10 +24,12 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#333',
-          height: 80,
+          backgroundColor: '#010',
+          height: 70,
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
+          borderBottomRightRadius: 20,
+          borderBottomLeftRadius: 20,
           position: 'absolute',
           marginHorizontal: 20,
           marginBottom: 10,
@@ -41,13 +43,13 @@ export default function TabLayout() {
           tabBarIcon: ({ focused }) => <TabIcon source={icons.home} focused={focused} />,
         }}
       />
-      <Tab.Screen
-        name="Wallet"
-        component={Wallet}
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon source={icons.wallet} focused={focused} />,
-        }}
-      />
+      {/* <Tab.Screen */}
+      {/*   name="Wallet" */}
+      {/*   component={Wallet} */}
+      {/*   options={{ */}
+      {/*     tabBarIcon: ({ focused }) => <TabIcon source={icons.wallet} focused={focused} />, */}
+      {/*   }} */}
+      {/* /> */}
       <Tab.Screen
         name="RideHistory"
         component={RideHistory}
