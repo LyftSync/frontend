@@ -1,17 +1,20 @@
-import React, { useRef } from 'react'
-import { View, SafeAreaView } from 'react-native'
-import SearchBox from '../../components/map/SearchBox'
-import Map from '../../components/map/Map'
-import LocateMeButton from '../../components/map/LocateMeButton'
-import BookingPopUp from '../../components/map/BookingPopUp'
-import BookingBottomSheet from '../../components/map/BookingBottomSheet'
+import React, { useState } from 'react';
+import { View, SafeAreaView } from 'react-native';
+import SearchBox from '../../components/map/SearchBox';
+import Map from '../../components/map/Map';
+import LocateMeButton from '../../components/map/LocateMeButton';
+import BookingPopUp from '../../components/map/BookingPopUp';
+import ModeSelectionScreen from '../../components/booking/ModeSelectionScreen';
+import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
-  const sheetRef = useRef(null)
+  const [showModeSelect, setShowModeSelect] = useState(false);
+  const navigation = useNavigation();
 
-  const openBottomSheet = () => {
-    sheetRef.current?.expand()
-  }
+  const handleSelectMode = () => {
+    setShowModeSelect(false);
+    navigation.navigate('ModeSelectionScreen');
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -21,15 +24,15 @@ const Home = () => {
         <SearchBox />
       </SafeAreaView>
 
-      <BookingPopUp onPress={openBottomSheet} />
+      <BookingPopUp onPress={() => setShowModeSelect(true)} />
 
       <View style={{ position: 'absolute', bottom: 100, right: 25 }}>
         <LocateMeButton />
       </View>
 
-      <BookingBottomSheet ref={sheetRef} />
+      {showModeSelect && <ModeSelectionScreen onSelect={handleSelectMode} />}
     </View>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

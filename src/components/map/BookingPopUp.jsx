@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import tw from 'tailwind-react-native-classnames'
 import useMapStore from '../../stores/mapStore'
 
+import { useNavigation } from '@react-navigation/native';
 const BookingPopUp = ({ onPress }) => {
   const origin = useMapStore((state) => state.origin)
   const destination = useMapStore((state) => state.destination)

@@ -1,18 +1,17 @@
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import TabLayout from './navigation/tabs/TabLayout';
+import ModeSelectScreen from './components/booking/ModeSelectionScreen';
+import ConfirmationScreen from './components/booking/ConfirmationScreen';
 
-import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+const Stack = createNativeStackNavigator();
 
-import Map from './components/map/Map';
-import SearchBox from './components/map/SearchBox';
-// import LocateMe from '@/components/LocateMe';
-    import TabLayout from './navigation/tabs/TabLayout';
-const HomeMapTab = () => {
+export default function HomeMapTab() {
   return (
-    <View style={{ flex: 1 }}>
-
-		<TabLayout/>
-		</View>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Tabs" component={TabLayout} />
+      {/* <Stack.Screen name="ModeSelect" component={ModeSelectScreen} /> */}
+      <Stack.Screen name="Confirmation" component={ConfirmationScreen} />
+    </Stack.Navigator>
   );
-};
-
-export default HomeMapTab;
+}
