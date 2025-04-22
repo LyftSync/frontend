@@ -1,24 +1,38 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Dimensions, Pressable } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 import { icons } from '../../../assets/assestsIndex';
+import { X } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native'; // ✅ Import this
 
 const { height } = Dimensions.get('window');
 const panelHeight = height / 3;
 
-const ModeSelectionScreen = ({ navigation }) => {
+const ModeSelectionScreen = ({ onSelect }) => {
+  const navigation = useNavigation(); // ✅ Use this instead of props.navigation
+
+  const handleSelect = (mode) => {
+    onSelect?.(mode);
+  };
 
   return (
     <View
       style={[
-        tw` relative bottom-60 m-2 bg-black px-5 pt-5 rounded-2xl`,
-
-
-				
-        { height: panelHeight },
+        tw`m-2 px-5 pt-5 rounded-2xl`,
+        {
+          height: panelHeight,
+          backgroundColor: 'rgba(0,0,0,0.9)',
+        },
       ]}
     >
-      <Text style={[tw`text-xl font-semibold text-center mb-5`,{color:'#fff'}]}>
+      <Pressable
+        onPress={() => navigation.goBack()} // ✅ no error now
+        style={tw`absolute top-2 right-4 z-10`}
+      >
+        <X size={25} color="white" />
+      </Pressable>
+
+      <Text style={[tw`text-xl font-semibold text-center mb-5`, { color: '#fff' }]}>
         Choose Your Ride Mode
       </Text>
 

@@ -5,7 +5,8 @@ import tw from 'tailwind-react-native-classnames';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useEffect, useRef } from 'react';
 
-const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+import { GOOGLE_MAPS_API_KEY } from '@env';
+const apiKey = GOOGLE_MAPS_API_KEY;
 
 const SearchBox = () => {
   const setOrigin = useMapStore((state) => state.setOrigin);
@@ -36,7 +37,7 @@ const SearchBox = () => {
   }, [origin]);
 
   return (
-    <SafeAreaView style={[tw`bg-black rounded-2xl`, styles.container]}>
+    <SafeAreaView style={[tw`bg-black flex rounded-2xl`, styles.container]}>
       <View style={styles.searchWrapper}>
         <GooglePlacesAutocomplete
           ref={autocompleteRef}
@@ -129,7 +130,8 @@ const styles = StyleSheet.create({
     padding: 7,
   },
   searchWrapper: {
-    marginBottom: 5,
+    marginBottom: 10,
+
   },
   label: {
     fontSize: 18,

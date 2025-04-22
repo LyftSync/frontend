@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, SafeAreaView } from 'react-native';
+import { View, SafeAreaView, StyleSheet } from 'react-native';
 import SearchBox from '../../components/map/SearchBox';
 import Map from '../../components/map/Map';
 import LocateMeButton from '../../components/map/LocateMeButton';
@@ -8,12 +8,19 @@ import ModeSelectionScreen from '../../components/booking/ModeSelectionScreen';
 import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
-  const [showModeSelect, setShowModeSelect] = useState(false);
   const navigation = useNavigation();
+  const [showBookingPopUp, setShowBookingPopUp] = useState(true);
+  const [showModeSelect, setShowModeSelect] = useState(false);
+
+  const toggleModeSelection = () => {
+    setShowBookingPopUp(false);
+    setShowModeSelect(true);
+  };
 
   const handleSelectMode = () => {
     setShowModeSelect(false);
-    navigation.navigate('ModeSelectionScreen');
+    setShowBookingPopUp(true); // Optionally bring back popup or navigate
+    navigation.navigate('Confirmation'); // or any screen
   };
 
   return (
@@ -24,13 +31,25 @@ const Home = () => {
         <SearchBox />
       </SafeAreaView>
 
-      <BookingPopUp onPress={() => setShowModeSelect(true)} />
+      {showBookingPopUp && (
+        <BookingPopUp onPress={toggleModeSelection} />
+      )}
 
       <View style={{ position: 'absolute', bottom: 100, right: 25 }}>
         <LocateMeButton />
       </View>
 
-      {showModeSelect && <ModeSelectionScreen onSelect={handleSelectMode} />}
+      {showModeSelect && (
+        <View
+          style={{
+            ...StyleSheet.absoluteFillObject,
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            justifyContent: 'center',
+          }}
+        >
+          <ModeSelectionScreen onSelect={handleSelectMode} />
+        </View>
+      )}
     </View>
   );
 };

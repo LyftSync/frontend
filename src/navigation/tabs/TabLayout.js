@@ -64,7 +64,7 @@ export default function TabLayout() {
       />
       <Tab.Screen
         name="HomeScreen"
-        component={HomeScreen}
+        component={Profile}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabIcon source={icons.profile} focused={focused} />

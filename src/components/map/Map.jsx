@@ -1,4 +1,4 @@
-import React,{useRef} from 'react';
+import React,{useRef, useEffect} from 'react';
 
 import { View, StyleSheet } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -9,11 +9,25 @@ import { GOOGLE_MAPS_API_KEY } from '@env';
 const Map = () => {
   const origin = useMapStore((state) => state.origin);
   const destination = useMapStore((state) => state.destination);
-
+  const apikey = GOOGLE_MAPS_API_KEY
   const fallbackOrigin = {
     location: { lat: 22.7196, lng: 75.8577 },
     description: 'Default Origin',
   };
+	const mapRef = useRef(null)
+
+	useEffect(()=>{
+		if(!origin && !destination) return null
+
+		mapRef.current.fitToSuppliedMarkers(['origin','destination'],{
+
+      edgePadding: { top: 50, right: 50, bottom: 50, left: 50 }
+		})
+
+		
+	},[origin,destination])
+
+
 
   // Transform origin and destination to MapView-compatible format
   const originCoords = origin?.location?.lat && origin?.location?.lng
@@ -31,20 +45,21 @@ const Map = () => {
   return (
     <View style={styles.container}>
       <MapView
+		ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={{
           latitude: originCoords.latitude,
           longitude: originCoords.longitude,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
         }}
-        region={hasValidOrigin ? {
-          latitude: originCoords.latitude,
-          longitude: originCoords.longitude,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        } : undefined}
+        // region={hasValidOrigin ? {
+        //   latitude: originCoords.latitude,
+        //   longitude: originCoords.longitude,
+        //   latitudeDelta: 0.005,
+        //   longitudeDelta: 0.005,
+        // } : undefined}
       >
         {/* Origin Marker */}
         {hasValidOrigin && (
@@ -56,6 +71,7 @@ const Map = () => {
             title="Origin"
             description={origin.description || 'Starting Point'}
             pinColor="red"
+			identifier="origin"
           />
         )}
 
@@ -69,6 +85,7 @@ const Map = () => {
             title="Destination"
             description={destination.description || 'End Point'}
             pinColor="blue"
+			identifier="destination"
           />
         )}
 
@@ -77,9 +94,9 @@ const Map = () => {
           <MapViewDirections
             origin={originCoords}
             destination={destinationCoords}
-            apikey={GOOGLE_MAPS_API_KEY}
+            apikey={apikey}
             strokeWidth={3}
-            strokeColor="red"
+            strokeColor="blue"
             mode="DRIVING"
             onError={(error) => console.error('MapViewDirections Error:', error)}
           />

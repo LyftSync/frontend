@@ -10,7 +10,7 @@ export default function HomeMapTab() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Tabs" component={TabLayout} />
-      {/* <Stack.Screen name="ModeSelect" component={ModeSelectScreen} /> */}
+      <Stack.Screen name="ModeSelect" component={ModeSelectScreen} />
       <Stack.Screen name="Confirmation" component={ConfirmationScreen} />
     </Stack.Navigator>
   );
