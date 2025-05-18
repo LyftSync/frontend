@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function LoginScreen() {
   const navigation = useNavigation();
   const { login, loading } = useAuthStore();
+  // console.log("LoginScreen loading state:", loading); // Keep for debugging
 
   const [userIdentifier, setUserIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -32,32 +33,32 @@ export default function LoginScreen() {
       return;
     }
 
-    let identifierType = "username";
-    if (userIdentifier.includes("@")) {
-      identifierType = "email";
-    } else if (/^\d+$/.test(userIdentifier)) {
-      identifierType = "phoneNumber";
-    }
-
     const loginSuccess = await login({
-      [identifierType]: userIdentifier,
+      "emailOrPhone": userIdentifier, // Corrected: key is a string
       password,
     });
 
     if (loginSuccess) {
       console.log("Login successful! Auth state updated.");
+      // Successful login should trigger isAuthenticated to true,
+      // which AppNavigator will use to switch to the main app.
     } else {
       console.log("Login failed (flash message should be visible).");
+      // The authStore's showMessage should handle error display.
+      // You could set localError here if you want more specific local feedback too.
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : null}
+      behavior={Platform.OS === "ios" ? "padding" : "height"} // "height" can sometimes work better
       keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
     >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled" // Helps with taps inside ScrollView
+      >
         <View style={styles.container}>
           <Text style={styles.title}>Login</Text>
 
@@ -123,6 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   container: {
+    // flex: 1, // Remove if scrollContainer is handling flexGrow
     justifyContent: "center",
     padding: 20,
   },

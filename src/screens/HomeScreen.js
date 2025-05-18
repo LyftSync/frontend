@@ -8,11 +8,11 @@ import {
   ScrollView,
 } from "react-native";
 import useAuthStore from "../stores/authStore";
-import { showMessage } from "react-native-flash-message";
 
 export default function HomeScreen() {
-  const [data, setData] = useState(null);
+  const [apiStatus, setApiStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingUser, setIsFetchingUser] = useState(false);
   const [error, setError] = useState(null);
 
   const { isAuthenticated, logout } = useAuthStore();
@@ -20,14 +20,11 @@ export default function HomeScreen() {
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    setData(null);
+    setApiStatus(null);
 
     try {
       const response = await fetch(process.env.EXPO_PUBLIC_API_BASE_URL, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
 
       if (!response.ok) {
@@ -35,7 +32,7 @@ export default function HomeScreen() {
       }
 
       const responseData = await response.json();
-      setData(responseData.message);
+      setApiStatus(responseData.message);
     } catch (err) {
       setError(`Failed to fetch data. Error: ${err.message}`);
     } finally {
@@ -43,14 +40,19 @@ export default function HomeScreen() {
     }
   }, []);
 
+  const handleFetchUser = async () => {
+    setIsFetchingUser(true);
+    await useAuthStore.getState().fetchUser(); // fetchUser in store now handles its own loading and messages
+    setIsFetchingUser(false);
+  };
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
   const handleLogout = () => {
     logout();
-    setData(null);
-    showMessage({ message: "Logged Out", type: "info" });
+    setApiStatus(null);
   };
 
   let content;
@@ -58,18 +60,20 @@ export default function HomeScreen() {
     content = <ActivityIndicator size="large" color="#0000ff" />;
   } else if (error) {
     content = <Text style={styles.errorText}>{error}</Text>;
-  } else if (data) {
+  } else if (apiStatus) {
     content = (
       <>
-        <Text style={styles.successText}>Data from Backend:</Text>
+        <Text style={styles.successText}>API Status:</Text>
         <ScrollView style={styles.scrollView}>
-          <Text style={styles.dataText}>{JSON.stringify(data, null, 2)}</Text>
+          <Text style={styles.dataText}>{apiStatus}</Text>
         </ScrollView>
       </>
     );
   } else {
-    content = <Text>No data loaded yet.</Text>;
+    content = <Text>No API status loaded yet.</Text>;
   }
+
+  const user = useAuthStore((state) => state.user);
 
   return (
     <View style={styles.container}>
@@ -78,8 +82,22 @@ export default function HomeScreen() {
         Authentication Status: {isAuthenticated ? "Logged In" : "Logged Out"}
       </Text>
 
-      <View style={styles.contentBox}>{content}</View>
+      {isAuthenticated && user && (
+        <View style={styles.userInfoBox}>
+          <Text style={styles.userInfoTitle}>User Info (from Store):</Text>
+          <Text>Name: {user.name}</Text>
+          <Text>Email: {user.email}</Text>
+          <Text>Role: {user.role}</Text>
+          {isFetchingUser && <ActivityIndicator size="small" color="#007bff" />}
+          <Button
+            title="Refresh User Data"
+            onPress={handleFetchUser}
+            disabled={isFetchingUser}
+          />
+        </View>
+      )}
 
+      <View style={styles.contentBox}>{content}</View>
       <View style={styles.buttonContainer}>
         <Button title="Reload Data" onPress={fetchData} disabled={isLoading} />
         {isAuthenticated && (
@@ -109,6 +127,18 @@ const styles = StyleSheet.create({
   },
   contentBox: {
     borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 15,
+    width: "100%",
+    minHeight: 80,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 15,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 8,
+  },
+  userInfoBox: {
+    borderWidth: 1,
     borderColor: "#ccc",
     padding: 15,
     width: "100%",
@@ -116,6 +146,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
+    borderRadius: 5,
+  },
+  userInfoTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
   },
   errorText: {
     color: "red",
@@ -139,5 +175,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: "100%",
+    maxHeight: 100,
   },
 });

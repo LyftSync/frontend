@@ -1,10 +1,9 @@
-import home from "./icons/home.png"
-import profile from "./icons/profile.png"
-import wallet from "./icons/wallet.png"
-import list from "./icons/list.png"
 export const icons = {
-	home,
-	profile,
-	wallet,
-	list
-}
+  home: "home_icon_placeholder.png",
+  list: "list_icon_placeholder.png",
+  profile: "profile_icon_placeholder.png",
+  wallet: "wallet_icon_placeholder.png",
+  car: "car_icon_placeholder.png",
+  offer_ride: "offer_ride_icon_placeholder.png",
+  ride_history: "ride_history_icon_placeholder.png",
+};

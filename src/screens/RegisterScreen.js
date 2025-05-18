@@ -19,9 +19,9 @@ export default function RegisterScreen() {
 
   const { register, loading } = useAuthStore();
 
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState("");
 
@@ -33,7 +33,7 @@ export default function RegisterScreen() {
   const handleRegisterPress = async () => {
     setLocalError("");
 
-    if (!fullName || !email || !password || !phoneNumber) {
+    if (!name || !email || !password || !phone) {
       setLocalError("Please fill in all fields.");
       return;
     }
@@ -46,16 +46,17 @@ export default function RegisterScreen() {
 
     const phoneRegex =
       /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
-    if (!phoneRegex.test(phoneNumber)) {
+    if (!phoneRegex.test(phone)) {
       setLocalError("Please enter a valid phone number.");
       return;
     }
 
     const registerSuccess = await register({
-      fullName,
+      name,
       email,
       password,
-      phoneNumber,
+      phone,
+      role: "rider",
     });
 
     if (registerSuccess) {
@@ -79,8 +80,8 @@ export default function RegisterScreen() {
           <TextInput
             style={styles.input}
             placeholder="Full Name"
-            value={fullName}
-            onChangeText={setFullName}
+            value={name}
+            onChangeText={setName}
             autoCapitalize="words"
             editable={!loading}
             returnKeyType="next"
@@ -116,8 +117,8 @@ export default function RegisterScreen() {
           <TextInput
             style={styles.input}
             placeholder="Phone Number"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
+            value={phone}
+            onChangeText={setPhone}
             keyboardType="phone-pad"
             editable={!loading}
             returnKeyType="done"

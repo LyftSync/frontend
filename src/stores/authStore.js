@@ -38,13 +38,14 @@ const useAuthStore = create(
               false,
             );
 
-            if (!response?.token) {
+            if (!response || !response.token) {
               throw new Error(response?.message || "Login failed");
             }
 
+            const { token, ...userData } = response;
             set({
-              token: response.token,
-              user: response.user || null,
+              token: token,
+              user: userData || null,
               isAuthenticated: true,
             });
 
@@ -61,7 +62,6 @@ const useAuthStore = create(
               userData,
               false,
             );
-            console.log(response);
 
             if (!response) {
               throw new Error("Registration failed");
@@ -82,27 +82,23 @@ const useAuthStore = create(
               throw new Error("No authentication token found");
             }
 
-            const userData = await apiRequest("/users/me", "GET", null, true);
+            const userData = await apiRequest(
+              "/api/auth/me",
+              "GET",
+              null,
+              true,
+            );
             if (!userData) {
               throw new Error("Failed to fetch user data");
             }
 
             set({ user: userData, isAuthenticated: true });
-            return userData;
+            return true;
           }, "loading");
         },
 
         logout: async () => {
           return withLoading(async () => {
-            try {
-              await apiRequest("/api/auth/logout", "POST", null, true);
-            } catch (error) {
-              console.log(
-                "Logout API error (proceeding anyway):",
-                error.message,
-              );
-            }
-
             set({ token: null, user: null, isAuthenticated: false });
             showMessage({ message: "Logged out successfully", type: "info" });
             return true;
