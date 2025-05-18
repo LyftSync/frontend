@@ -1,6 +1,5 @@
 import "dotenv/config";
-
-export default {
+export default () => ({
   expo: {
     name: "LyftSync",
     slug: "lyftsync",
@@ -44,11 +43,12 @@ export default {
       favicon: "./assets/images/circlelogo.png"
     },
     extra: {
-      apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
-      googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY
+			EXPO_PUBLIC_API_BASE_URL:process.env.EXPO_PUBLIC_API_BASE_URL,
+      GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
+      eas: {
+        projectId: "6e5e165c-8385-439d-b170-46d2f79ea202"
+      }
     },
-    plugins: [
-      "expo-location"
-    ]
+    plugins: ["expo-location"]
   }
-};
+});

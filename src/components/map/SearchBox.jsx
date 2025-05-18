@@ -5,7 +5,7 @@ import tw from 'tailwind-react-native-classnames';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useEffect, useRef } from 'react';
 
-import { GOOGLE_MAPS_API_KEY } from '@env';
+import { GOOGLE_MAPS_API_KEY } from '@env'
 const apiKey = GOOGLE_MAPS_API_KEY;
 
 const SearchBox = () => {

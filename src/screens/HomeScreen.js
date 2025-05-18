@@ -10,6 +10,7 @@ import {
 import useAuthStore from "../stores/authStore";
 import { showMessage } from "react-native-flash-message";
 
+import { EXPO_PUBLIC_API_BASE_URL} from '@env'
 export default function HomeScreen() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +24,7 @@ export default function HomeScreen() {
     setData(null);
 
     try {
-      const response = await fetch(process.env.EXPO_PUBLIC_API_BASE_URL, {
+      const response = await fetch(EXPO_PUBLIC_API_BASE_URL, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

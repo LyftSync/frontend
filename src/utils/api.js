@@ -2,7 +2,8 @@ import useAuthStore from "../stores/authStore";
 import { showMessage } from "react-native-flash-message";
 import { Alert } from "react-native";
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
+import { EXPO_PUBLIC_API_BASE_URL} from '@env'
+const API_BASE_URL = EXPO_PUBLIC_API_BASE_URL;
 
 if (!API_BASE_URL) {
   console.error(

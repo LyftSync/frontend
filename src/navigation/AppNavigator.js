@@ -11,8 +11,8 @@ export default function AppNavigator() {
 
   return (
     <NavigationContainer>
-
-      {isAuthenticated ? <HomeMapTab /> : <AuthNavigator />}
+<HomeMapTab/>
+      {/* {isAuthenticated ? <HomeMapTab /> : <AuthNavigator />} */}
     </NavigationContainer>
   );
 }
