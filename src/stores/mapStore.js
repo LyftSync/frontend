@@ -1,26 +1,3 @@
-//
-// import { create } from 'zustand';
-// import { persist, createJSONStorage } from 'zustand/middleware';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-//
-// const useMapStore = create(
-//   persist(
-//     (set) => ({
-//       origin: null,
-//       destination: null,
-//
-//       setOrigin: (latitude, longitude) => set({ origin: { latitude, longitude } }),
-//       setDestination: (latitude, longitude) => set({ destination: { latitude, longitude } }),
-//       resetLocations: () => set({ origin: null, destination: null }),
-//     }),
-//     {
-//       name: 'mapStore', 
-//       storage: createJSONStorage(() => AsyncStorage),
-// 		}
-//   )
-// );
-//
-// export default useMapStore;
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,28 +7,21 @@ const useMapStore = create(
     (set) => ({
       origin: null,
       destination: null,
-
-      setOrigin: (origin) =>
+      setOrigin: (originData) =>
         set({
-          origin: origin?.location?.lat && origin?.location?.lng
+          origin: originData
             ? {
-                location: {
-                  lat: origin.location.lat,
-                  lng: origin.location.lng,
-                },
-                description: origin.description || '',
+                location: originData.location,
+                description: originData.description,
               }
             : null,
         }),
-      setDestination: (destination) =>
+      setDestination: (destinationData) =>
         set({
-          destination: destination?.location?.lat && destination?.location?.lng
+          destination: destinationData
             ? {
-                location: {
-                  lat: destination.location.lat,
-                  lng: destination.location.lng,
-                },
-                description: destination.description || '',
+                location: destinationData.location,
+                description: destinationData.description,
               }
             : null,
         }),
@@ -60,6 +30,16 @@ const useMapStore = create(
     {
       name: 'mapStore',
       storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          console.error('Error rehydrating mapStore:', error);
+          // Reset state to prevent crashes
+          return {
+            origin: null,
+            destination: null,
+          };
+        }
+      },
     }
   )
 );

@@ -2,99 +2,50 @@ import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import useMapStore from '../../stores/mapStore';
 import tw from 'tailwind-react-native-classnames';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useEffect, useRef } from 'react';
-
+import 'react-native-get-random-values'
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
 const SearchBox = () => {
-  const setOrigin = useMapStore((state) => state.setOrigin);
-  const setDestination = useMapStore((state) => state.setDestination);
-  const origin = useMapStore((state) => state.origin);
-  const autocompleteRef = useRef(null); // Ref to control GooglePlacesAutocomplete
+  if (!apiKey) {
+    console.error('Google Maps API key is not set');
+    return <Text style={styles.errorText}>API Key Missing</Text>;
+  }
 
-  const opacity = useSharedValue(0);
-  const translateY = useSharedValue(20);
+  // Access store with fallback
+  const store = useMapStore();
+  if (!store || !store.setOrigin || !store.setDestination) {
+    console.error('Map store is not initialized');
+    return <Text style={styles.errorText}>Map Store Error</Text>;
+  }
 
-  const animatedStyles = useAnimatedStyle(() => ({
-    opacity: withTiming(opacity.value, { duration: 300 }),
-    transform: [{ translateY: withTiming(translateY.value, { duration: 300 }) }],
-  }));
+  const { setOrigin, setDestination, origin } = store;
+  const autocompleteRef = useRef(null);
 
   useEffect(() => {
     if (origin?.location?.lat && origin?.location?.lng && origin?.description) {
-      // Update autocomplete input with origin description
       autocompleteRef.current?.setAddressText(origin.description);
-      opacity.value = 1; // Show destination input
-      translateY.value = 0; // Slide to original position
     } else {
-      // Clear autocomplete input when origin is null
       autocompleteRef.current?.setAddressText('');
-      opacity.value = 0; // Hide destination input
-      translateY.value = 20; // Slide down
     }
   }, [origin]);
 
   return (
     <SafeAreaView style={[tw`bg-black rounded-2xl`, styles.container]}>
       <View style={styles.searchWrapper}>
-        <GooglePlacesAutocomplete
-          ref={autocompleteRef}
-          placeholder="Kaha Jaoge?"
-          styles={searchStyles}
-          returnKeyType="search"
-          nearbyPlacesAPI="GooglePlacesSearch"
-          fetchDetails={true}
-          onPress={(data, details = null) => {
-            if (details?.geometry?.location) {
-              setOrigin({
-                location: details.geometry.location,
-                description: data.description,
-              });
-              setDestination(null);
-            }
-          }}
-          minLength={3}
-          query={{
-            key: apiKey,
-            language: 'en',
-          }}
-          requestUrl={{
-            url: 'https://maps.googleapis.com/maps/api',
-            useOnPlatform: 'all',
-          }}
-          debounce={2000}
-        />
+<GooglePlacesAutocomplete
+  ref={autocompleteRef}
+  placeholder="Kaha Jaoge?"
+  onPress={(data, details = null) => {
+    console.log('Data:', data, 'Details:', details);
+  }}
+  query={{
+    key: apiKey,
+    language: 'en',
+  }}
+  onFail={(error) => console.error('GooglePlacesAutocomplete error:', error)}
+/>
       </View>
-      {origin && (
-        <Animated.View style={[animatedStyles, styles.searchWrapper]}>
-          <GooglePlacesAutocomplete
-            placeholder="Kaha Tak Jaoge?"
-            styles={searchStyles}
-            returnKeyType="search"
-            nearbyPlacesAPI="GooglePlacesSearch"
-            fetchDetails={true}
-            onPress={(data, details = null) => {
-              if (details?.geometry?.location) {
-                setDestination({
-                  location: details.geometry.location,
-                  description: data.description,
-                });
-              }
-            }}
-            minLength={3}
-            query={{
-              key: apiKey,
-              language: 'en',
-            }}
-            requestUrl={{
-              url: 'https://maps.googleapis.com/maps/api',
-              useOnPlatform: 'all',
-            }}
-            debounce={2000}
-          />
-        </Animated.View>
-      )}
     </SafeAreaView>
   );
 };
@@ -103,7 +54,7 @@ const searchStyles = {
   container: {
     flex: 0,
     width: '100%',
-	height: '45%',
+    height: '45%',
   },
   textInput: {
     fontSize: 16,
@@ -131,11 +82,11 @@ const styles = StyleSheet.create({
   searchWrapper: {
     marginBottom: 5,
   },
-  label: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#fff',
-    marginBottom: 8,
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 
